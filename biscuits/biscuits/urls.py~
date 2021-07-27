@@ -1,0 +1,36 @@
+from django.http import HttpResponse
+from django.views import View
+
+class B(View):
+    def get(self, request):
+        html = "<html><head><title>6.8</title></head>"
+        html += "<body><h1>6.8</h1>"
+        html += "<form action='/estimate' method=GET><table><tr><td>Month</td><td><input required type=number name=month /></td></tr><tr><td>Day</td><td><input required type=number name=day /></td></tr><tr><td>Year</td><td><input required type=number name=year /></td></td></tr></table><input type=submit></form>"
+        html += "</body></html>"
+        return HttpResponse(html)
+
+    def do_some_stuff(request):
+        import astro
+        html = "<html><head><title>est.value</title><style> body{background-color: #80f; text-align: center;} table{text-align:center;} tr{background-color: #c328b1;} tr:nth-child(odd){background-color: pink;} th{background-color: cyan !important;} a{color: white;} a:visited{color: black;} h3{background-color: white; font-size: 35px;} div{margin: auto; width: 1000px; text-align: center;}</style></head>"
+        html += "<body><h1>Estimated Value</h1>"
+        estimated_value = astro.get_estimated_value(request.GET['year'], request.GET['month'], request.GET['day'])[0]
+        planets = astro.get_estimated_value(request.GET['year'], request.GET['month'], request.GET['day'])[1]
+        summa_cumma_latte = astro.get_estimated_value(request.GET['year'], request.GET['month'], request.GET['day'])[2]
+        html += "<h3>" + str(estimated_value) + "</h3>"
+        html += "<div><table border=1><tr><th>Planet</th><th>Sign</th><th>Value</th></tr><tr><td>Sun</td><td>" + planets[0] + "</td><td>" + str(summa_cumma_latte[0]) + "</td></tr>"
+        html += "<tr><td>Moon</td><td>" + planets[1] + "</td><td>" + str(summa_cumma_latte[1]) + "</td></tr>"
+        html += "<tr><td>Mercury</td><td>" + planets[2] + "</td><td>" + str(summa_cumma_latte[2]) + "</td></tr>"
+        html += "<tr><td>Venus</td><td>" + planets[3] + "</td><td>" + str(summa_cumma_latte[3]) + "</td></tr>"
+        html += "<tr><td>Mars</td><td>" + planets[4] + "</td><td>" + str(summa_cumma_latte[4]) + "</td></tr>"
+        html += "<tr><td>Jupiter</td><td>" + planets[5] + "</td><td>" + str(summa_cumma_latte[5]) + "</td></tr>"
+        html += "<tr><td>Saturn</td><td>" + planets[6] + "</td><td>" + str(summa_cumma_latte[6]) + "</td></tr></table></div>"
+        html += "</br><a href='/'>Back</a>"
+        html += "</body></html>"
+        return HttpResponse(html)
+    
+from django.conf.urls import url
+
+urlpatterns = [
+    url(r'^$', B.as_view(), name='b'),
+    url(r'^estimate', B.do_some_stuff, name='estimate'),
+]
